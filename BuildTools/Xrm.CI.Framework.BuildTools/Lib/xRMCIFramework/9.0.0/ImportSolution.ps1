@@ -15,6 +15,7 @@ param(
 [bool]$ImportAsync = $true, #Import solution in Async Mode, recommended
 [int]$AsyncWaitTimeout, #Optional - Async wait timeout in seconds
 [int]$Timeout, #Optional - CRM connection timeout
+[string]$solutionName #Optional - import solution name
 [string]$logsDirectory, #Optional - will place the import log in here
 [string]$logFilename #Optional - will use this as import log file name
 )
@@ -46,11 +47,12 @@ Write-Verbose "AsyncWaitTimeout = $AsyncWaitTimeout"
 Write-Verbose "ImportAsync = $ImportAsync"
 Write-Verbose "AsyncWaitTimeout = $AsyncWaitTimeout"
 Write-Verbose "Timeout = $Timeout"
+Write-Verbose "solutionName = $solutionName"
 Write-Verbose "logsDirectory = $logsDirectory"
 Write-Verbose "logFilename = $logFilename"
 
 $importJobId = [guid]::NewGuid()
 
-Import-XrmSolution -ConnectionString "$CrmConnectionString" -SolutionFilePath "$solutionFile" -publishWorkflows $publishWorkflows -overwriteUnmanagedCustomizations $overwriteUnmanagedCustomizations -SkipProductUpdateDependencies $skipProductUpdateDependencies -ConvertToManaged $convertToManaged -HoldingSolution $holdingSolution -OverrideSameVersion $override -ImportAsync $ImportAsync -ImportJobId $importJobId -AsyncWaitTimeout $AsyncWaitTimeout -DownloadFormattedLog $true -LogsDirectory "$logsDirectory" -LogFileName "$logFilename" -Timeout $Timeout
+Import-XrmSolution -ConnectionString "$CrmConnectionString" -SolutionFilePath "$solutionFile" -publishWorkflows $publishWorkflows -overwriteUnmanagedCustomizations $overwriteUnmanagedCustomizations -SkipProductUpdateDependencies $skipProductUpdateDependencies -ConvertToManaged $convertToManaged -HoldingSolution $holdingSolution -OverrideSameVersion $override -ImportAsync $ImportAsync -ImportJobId $importJobId -AsyncWaitTimeout $AsyncWaitTimeout -DownloadFormattedLog $true -LogsDirectory "$logsDirectory" -LogFileName "$logFilename" -Timeout $Timeout -SolutionName $solutionName
  
 Write-Verbose 'Leaving ImportSolution.ps1'
