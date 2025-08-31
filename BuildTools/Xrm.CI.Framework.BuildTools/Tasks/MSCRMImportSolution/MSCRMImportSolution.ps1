@@ -17,6 +17,7 @@ $holdingSolution = Get-VstsInput -Name holdingSolution -AsBool
 $override = Get-VstsInput -Name override -AsBool
 $useAsyncMode = Get-VstsInput -Name useAsyncMode -Require -AsBool
 $asyncWaitTimeout = Get-VstsInput -Name asyncWaitTimeout -Require -AsInt
+$solutionName = Get-VstsInput -Name solutionName
 $logsDirectory = Get-VstsInput -Name logsDirectory
 $logFileName = Get-VstsInput -Name logFileName
 $crmConnectionTimeout = Get-VstsInput -Name crmConnectionTimeout -Require -AsInt
@@ -28,6 +29,13 @@ Write-Verbose "MSCRM Tools Path: $mscrmToolsPath"
 if (-not $mscrmToolsPath)
 {
 	Write-Error "MSCRM_Tools_Path not found. Add 'Power DevOps Tool Installer' before this task."
+}
+
+if (-not $solutionName)
+{
+	$solutionFilename = $solutionFile.Substring($solutionFile.LastIndexOf("\") + 1)
+
+	$solutionName = $solutionFilename.replace(".zip", "")
 }
 
 #Logs
@@ -58,7 +66,7 @@ $logFile = "$logsDirectory\$logFilename"
 #Import
 try
 {
-	& "$mscrmToolsPath\xRMCIFramework\9.0.0\ImportSolution.ps1" -solutionFile "$solutionFile" -crmConnectionString "$CrmConnectionString" -override $override -publishWorkflows $publishWorkflows -overwriteUnmanagedCustomizations $overwriteUnmanagedCustomizations -skipProductUpdateDependencies $skipProductUpdateDependencies -ConvertToManaged $convertToManaged -HoldingSolution $holdingSolution -logsDirectory "$logsDirectory" -logFileName "$logFilename" -ImportAsync $useAsyncMode -AsyncWaitTimeout $asyncWaitTimeout -Timeout $crmConnectionTimeout
+	& "$mscrmToolsPath\xRMCIFramework\9.0.0\ImportSolution.ps1" -solutionFile "$solutionFile" -crmConnectionString "$CrmConnectionString" -override $override -publishWorkflows $publishWorkflows -overwriteUnmanagedCustomizations $overwriteUnmanagedCustomizations -skipProductUpdateDependencies $skipProductUpdateDependencies -ConvertToManaged $convertToManaged -HoldingSolution $holdingSolution -logsDirectory "$logsDirectory" -logFileName "$logFilename" -ImportAsync $useAsyncMode -AsyncWaitTimeout $asyncWaitTimeout -Timeout $crmConnectionTimeout -solutionName $solutionName
 }
 catch
 {
